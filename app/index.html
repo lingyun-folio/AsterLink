@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>星契 · AsterLink</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="icons/app.ico">
+</head>
+<body>
+<div class="app" id="app">
+  <!-- 标题栏 -->
+  <div class="titlebar">
+    <img class="logo-mark" src="icons/app.png" alt="应用图标" draggable="false">
+    <h1>星契</h1>
+    <span class="latin">AsterLink · Agent 启动器</span>
+    <div class="win-controls">
+      <button class="win-btn" id="btn-min" title="最小化">─</button>
+      <button class="win-btn" id="btn-max" title="最大化">▢</button>
+      <button class="win-btn close" id="btn-close" title="关闭">✕</button>
+    </div>
+  </div>
+
+  <div class="shell">
+    <!-- 导航 -->
+    <aside class="sidebar">
+      <button class="nav-btn active" data-view="stage" title="角色大厅">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c.8-4 3.7-6 7.5-6s6.7 2 7.5 6"/></svg>
+        角色大厅
+      </button>
+      <button class="nav-btn" data-view="config" title="连接配置">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 14l-2.5 2.5a3.2 3.2 0 01-4.5-4.5L6 8"/><path d="M15 10l2.5-2.5a3.2 3.2 0 014.5 4.5L18 16"/><path d="M9.5 14.5l5-5"/></svg>
+        连接配置
+      </button>
+      <button class="nav-btn" data-view="settings" title="设置">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2.8v3M12 18.2v3M2.8 12h3M18.2 12h3M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M18.5 5.5l-2.1 2.1M7.6 16.4l-2.1 2.1"/></svg>
+        设置
+      </button>
+      <button class="btn-cc" id="btn-ccswitch" title="启动 CC Switch 供应商切换">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h11M4 7l3-3M4 7l3 3"/><path d="M20 17H9M20 17l-3-3M20 17l-3 3"/></svg>
+        CC Switch
+      </button>
+      <div class="daemon">
+        <div class="dot"></div>
+        <div>守护进程<br>已就绪</div>
+      </div>
+    </aside>
+
+    <!-- 主区域 -->
+    <div class="main">
+      <!-- 角色大厅 -->
+      <section class="view active" id="view-stage">
+        <div class="stage-head">
+          <div class="stage-tools">
+            <div class="clock"><b id="clock-date">10月19日 周一</b><span id="clock-time">21:40</span></div>
+          </div>
+        </div>
+        <div class="dust" id="dust"></div>
+        <div class="roster" id="roster">
+          <div class="roster-cards" id="roster-cards"></div>
+          <div class="roster-empty" id="roster-empty" hidden>
+            <div class="empty-title">主页还空着</div>
+            <p>默认不带出场阵容。到连接配置里把想登场的星灵「添加到主页」，<br>TA 们就会出现在这里。</p>
+            <button class="btn btn-gold" id="btn-go-config">去连接配置添加</button>
+          </div>
+        </div>
+        <div class="stage-hint">单击星灵查看详情 · 双击召唤</div>
+
+        <!-- 聚焦详情：单击星灵后从右侧拉出 -->
+        <div class="stage-focus" id="stage-focus" hidden>
+          <div class="focus-char" id="focus-char"></div>
+          <div class="focus-panel" id="focus-panel">
+            <button class="focus-back" id="focus-back" title="推回，恢复阵容">&gt;&gt;</button>
+            <div class="focus-eyebrow">星灵档案</div>
+            <h3 id="focus-name">—</h3>
+            <div class="focus-quote" id="focus-quote"></div>
+            <div class="focus-field">
+              <label>召唤目标 · 选择 Agent</label>
+              <select id="focus-agent"></select>
+            </div>
+            <div class="focus-actions">
+              <button class="btn btn-ghost" id="focus-edit">调整连接</button>
+              <button class="btn btn-summon" id="focus-summon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M13 2L4.5 13.5H11L9.5 22 19 9.5h-6.5L13 2z"/></svg>
+                召唤 <span id="focus-summon-app">Agent</span>
+                <span class="key">Enter</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 连接配置 -->
+      <section class="view" id="view-config">
+        <div class="page">
+          <h2>连接配置</h2>
+          <p class="sub">列表优先展示已添加到主页的星灵。点击任意星灵可展开或收起详细连接配置；改动会即时保存。</p>
+          <div id="link-list"></div>
+        </div>
+      </section>
+
+      <!-- 设置 -->
+      <section class="view" id="view-settings">
+        <div class="page">
+          <h2>设置</h2>
+          <p class="sub">启动器的全局偏好。开机自启与托盘驻留由系统即时接管；召唤前确认暂为演示开关。</p>
+          <div class="set-row">
+            <div><b>开机自动启动星契</b><p>登录 Windows 后在托盘静默待命，随时可召唤。</p></div>
+            <button class="switch on" id="sw-autostart"></button>
+          </div>
+          <div class="set-row">
+            <div><b>召唤动画时长</b><p>演出越慢越有仪式感，越快越利落。当前约 <span id="anim-sec">4.0</span> 秒。</p></div>
+            <input type="range" min="2" max="8" step="0.5" value="4" id="anim-speed">
+          </div>
+          <div class="set-row">
+            <div><b>关闭窗口后驻留系统托盘</b><p>关掉大厅窗口不退出，托盘图标可随时回来、快速召唤或退出。</p></div>
+            <button class="switch on" id="sw-tray"></button>
+          </div>
+          <div class="set-row">
+            <div><b>已召唤小窗方向</b><p>主界面最小化或退回托盘时浮出，列出已召唤的 Agent。竖向贴屏幕右侧，横向贴底部居中。</p></div>
+            <div class="seg" id="mini-layout-switch">
+              <button class="seg-btn active" data-layout="vertical">竖向</button>
+              <button class="seg-btn" data-layout="horizontal">横向</button>
+            </div>
+          </div>
+          <div class="set-row">
+            <div><b>固定小窗位置</b><p>开启后小窗不能被拖动，切换应用时也保持原位；关闭时长按小窗任意位置即可拖动，松手自动吸附在屏幕内。</p></div>
+            <button class="switch" id="sw-mini-pin"></button>
+          </div>
+          <div class="set-row set-agent">
+            <div class="agent-bar">
+              <span class="ab-title">agent 配置</span>
+              <button class="btn-mini" id="agent-toggle" type="button" title="展开 / 收起列表">
+                <svg class="ab-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <button class="btn-mini" id="agent-add" type="button">新增</button>
+            </div>
+            <p class="ab-hint">「选择」可从本机已装的程序里挑启动目标；「常驻」的 agent 会随星契一起预先拉起，召唤时直接唤醒已有实例——第三方应用首次冷启动通常要 1–3 秒，常驻能把这段省掉。</p>
+            <div class="agent-list" id="agent-list" hidden></div>
+          </div>
+          <div class="set-row">
+            <div><b>CC Switch 路径</b><p>可选外部工具，请选择本机安装路径；左侧 CC Switch 按钮用于启动它。</p></div>
+            <div class="path-pick">
+              <input id="ccswitch-path" spellcheck="false" placeholder="请选择 CC Switch 的本机程序路径">
+              <button class="btn-mini pick-btn" id="ccswitch-pick" type="button">浏览…</button>
+            </div>
+          </div>
+          <div class="set-row">
+            <div><b>界面主题</b><p>系统内置两套背景参数，随时切换：深色 · 星夜 / 浅色 · 晨光。</p></div>
+            <div class="seg" id="theme-switch">
+              <button class="seg-btn active" data-theme="dark">深色 · 星夜</button>
+              <button class="seg-btn" data-theme="light">浅色 · 晨光</button>
+            </div>
+          </div>
+          <div class="set-row">
+            <div><b>召唤前确认</b><p>在全屏演出开始前弹出确认，防止误触。</p></div>
+            <button class="switch" data-switch></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 全屏启动演出 -->
+      <div class="launch" id="launch">
+        <div class="stars" id="stars"></div>
+        <div class="streaks" id="streaks"></div>
+        <div class="magic-rings">
+          <div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div>
+          <div class="ring-ticks"></div><div class="ring-ticks rev"></div>
+        </div>
+        <div class="launch-stage">
+          <div class="launch-art" id="launch-char"></div>
+          <div class="launch-quote" id="launch-quote">「深海的数据，已为你调齐。」</div>
+          <div class="summon-box">
+            <div class="summon-target">召唤目标 · <span id="s-app">目标 Agent</span></div>
+            <div class="summon-path" id="s-path">C:\Program Files\Agent\Agent.exe</div>
+            <div class="progress"><i></i></div>
+            <div class="summon-status" id="s-status">正在通过软连接唤醒目标进程…</div>
+          </div>
+        </div>
+        <div class="flash" id="flash"></div>
+      </div>
+
+      <div class="toast" id="toast"></div>
+    </div>
+  </div>
+</div>
+
+<script src="renderer.js"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,84 @@
+/* 已召唤小窗：透明背景，只画一条浮条。默认竖排，.horizontal 时横排。
+   注意：不再使用 -webkit-app-region:drag —— 拖动改由 JS 长按接管，
+   这样才能把窗口钳在显示器可用区域内、并在固定模式下彻底禁止移动。 */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:transparent;overflow:hidden}
+body{
+  font-family:"Segoe UI","Microsoft YaHei UI",sans-serif;
+  color:#ECEAFF;
+  user-select:none;
+  -webkit-user-select:none;
+  cursor:grab;
+}
+body.dragging, body.dragging *{cursor:grabbing !important}
+
+.mini{
+  display:inline-flex;            /* 宽度跟着内容走，否则会撑满窗口、永远量不到真实尺寸 */
+  width:max-content;height:max-content;
+  flex-direction:column;align-items:center;
+  padding:8px 6px;
+  background:linear-gradient(160deg, rgba(23,27,70,.94), rgba(14,16,48,.96));
+  border:1px solid rgba(198,204,255,.18);
+  border-radius:16px;
+  box-shadow:0 14px 34px rgba(4,6,26,.55), inset 0 1px 0 rgba(255,255,255,.06);
+}
+.mini.horizontal{flex-direction:row;padding:6px 8px}
+.mini.pinned{cursor:default}
+
+/* 星契图标：点开主界面 */
+.hub{
+  width:44px;height:44px;flex:none;border-radius:13px;cursor:pointer;
+  border:1px solid rgba(242,200,121,.34);
+  background:rgba(242,200,121,.10);
+  display:grid;place-items:center;
+  transition:transform .15s, box-shadow .15s, background .15s;
+}
+.hub img{width:38px;height:38px;border-radius:7px;display:block}
+.hub:hover{
+  transform:translateY(-1px);
+  background:rgba(242,200,121,.18);
+  box-shadow:0 0 14px rgba(242,200,121,.35);
+}
+
+/* 两组图标之间的隔离带：既是视觉分组，也是拖拽的「把手」提示 */
+.gap{
+  flex:none;position:relative;
+  width:100%;height:18px;
+}
+.gap::after{
+  content:"";position:absolute;left:24%;right:24%;top:50%;height:1px;
+  background:rgba(198,204,255,.18);transform:translateY(-.5px);
+}
+.mini.horizontal .gap{width:18px;height:100%}
+.mini.horizontal .gap::after{left:50%;right:auto;top:24%;bottom:24%;width:1px;height:auto;transform:translateX(-.5px)}
+.mini.empty .gap{display:none}
+/* 固定状态：分隔线变金色，提示位置已锁定 */
+.mini.pinned .gap::after{background:rgba(242,200,121,.6)}
+
+.avatars{display:flex;flex-direction:column;gap:8px}
+.mini.horizontal .avatars{flex-direction:row}
+
+/* Agent 图标：方格子 */
+.avatar{
+  position:relative;width:44px;height:44px;flex:none;
+  border-radius:13px;overflow:hidden;cursor:pointer;
+  border:0;padding:0;background:transparent;
+  transition:transform .15s, opacity .2s, box-shadow .15s;
+}
+.avatar img{width:100%;height:100%;display:block;object-fit:contain;pointer-events:none}
+.avatar:hover{transform:translateY(-2px);box-shadow:0 0 14px rgba(124,140,255,.45)}
+.avatar.off{opacity:.5}
+
+/* 没有图标文件时的退化显示：取 Agent 名首字母 */
+.avatar .ph{
+  width:100%;height:100%;display:grid;place-items:center;
+  border-radius:13px;
+  background:linear-gradient(160deg, rgba(124,140,255,.35), rgba(42,47,138,.65));
+  color:#fff;font-size:17px;font-weight:700;letter-spacing:.02em;
+}
+
+.dot{
+  position:absolute;right:2px;bottom:2px;width:8px;height:8px;border-radius:50%;
+  background:#5CE0A6;box-shadow:0 0 8px #5CE0A6;border:1px solid rgba(0,0,0,.4);
+}
+.avatar.off .dot{background:#8A8FBF;box-shadow:none}

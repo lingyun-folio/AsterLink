@@ -1,0 +1,33 @@
+# Installed dependencies and generated distributions
+**/node_modules/
+**/dist/
+releases/
+*.exe
+*.blockmap
+*.asar
+*.7z
+*.zip
+
+# Local archives, profiles, generated previews and user configuration
+.local/
+tmp/
+backup/
+**/*-qa-*.png
+docs/project-introduction/*.html
+config.json
+config.v*.bak.json
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+*.log
+*.tsbuildinfo
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
+

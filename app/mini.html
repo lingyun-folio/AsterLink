@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>星契 · 已召唤</title>
+<link rel="stylesheet" href="mini.css">
+<link rel="icon" href="icons/app.ico">
+</head>
+<body>
+  <div class="mini" id="mini">
+    <button class="hub" id="hub" type="button" title="打开星契">
+      <img src="icons/app.png" alt="星契" draggable="false">
+    </button>
+    <!-- 视觉分组用：拖动由 JS 接管（长按任意位置），这段留白只是让两组图标分开 -->
+    <div class="gap" id="gap" title="按住这里或任意位置拖动小窗"></div>
+    <div class="avatars" id="avatars"></div>
+  </div>
+  <script src="mini.js"></script>
+</body>
+</html>

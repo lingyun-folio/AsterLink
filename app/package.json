@@ -1,0 +1,84 @@
+{
+  "name": "asterlink",
+  "productName": "星契 AsterLink",
+  "version": "0.3.6",
+  "description": "星契 · AsterLink — 选择你的 AI 伙伴，一键召唤本地 Agent",
+  "author": "lingy",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win",
+    "dist:dir": "electron-builder --win dir",
+    "check": "node ../scripts/check.cjs",
+    "test:config": "node --test ../scripts/config-store.test.cjs",
+    "capture:main": "electron ../scripts/_intro-shot.cjs",
+    "capture:mini": "electron ../scripts/_intro-mini.cjs"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "com.lingy.aetherlink",
+    "electronDownload": {
+      "mirror": "https://npmmirror.com/mirrors/electron/"
+    },
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "preload-mini.js",
+      "config-store.js",
+      "index.html",
+      "styles.css",
+      "renderer.js",
+      "mini.html",
+      "mini.css",
+      "mini.js",
+      "art/**",
+      "agent-icons/**",
+      "icons/app.png",
+      "icons/app-1024.png",
+      "icons/app.ico",
+      "icons/app.svg",
+      "icons/tray.png"
+    ],
+    "win": {
+      "icon": "icons/app.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "星契",
+      "installerIcon": "icons/app.ico",
+      "uninstallerIcon": "icons/app.ico",
+      "artifactName": "AsterLink-${version}-setup.${ext}"
+    },
+    "portable": {
+      "artifactName": "AsterLink-${version}-portable.${ext}"
+    }
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  }
+}
