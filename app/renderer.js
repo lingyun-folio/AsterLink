@@ -3,7 +3,7 @@ const ART = "art/"; // Public edition uses project-generated artwork.
 // Older local configurations may refer to artwork omitted from the public edition.
 document.addEventListener("error", event => {
   const img = event.target;
-  if (img instanceof HTMLImageElement && img.getAttribute("src")?.startsWith(ART)
+  if (img instanceof HTMLImageElement && /^(art\/|file:)/.test(img.getAttribute("src") || "")
       && img.getAttribute("src") !== ART + "lumi.png") {
     img.src = ART + "lumi.png";
   }
@@ -179,9 +179,11 @@ function currentConfig(){
     },
   };
 }
-function persist(){
+async function persist(){
   if(!isDesktop) return;
-  window.aether.setConfig(currentConfig());
+  try {
+    if(!await window.aether.setConfig(currentConfig())) toast("配置保存失败，请检查磁盘空间和目录权限。");
+  } catch (_) { toast("配置保存失败，请稍后重试。"); }
 }
 let persistTimer;
 const persistSoon = ()=>{ clearTimeout(persistTimer); persistTimer = setTimeout(persist, 250); };
@@ -216,9 +218,9 @@ function cardHTML(c, agent, i){
         ${icon ? `<span class="agent-badge" title="${esc(agent)}">
           <img src="${icon}" alt="${esc(agent)}" draggable="false">
         </span>` : ""}
-        <div class="art-wrap"><img src="${c.img}" alt="${c.name}" draggable="false"></div>
+        <div class="art-wrap"><img src="${esc(c.img)}" alt="${esc(c.name)}" draggable="false"></div>
       </div>
-      <div class="char-name">${c.name}</div>
+      <div class="char-name">${esc(c.name)}</div>
       <div class="char-link">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14l-2.5 2.5a3.2 3.2 0 01-4.5-4.5L6 8"/><path d="M15 10l2.5-2.5a3.2 3.2 0 014.5 4.5L18 16"/></svg>
         ${esc(agent || "未指定 Agent")}
@@ -365,8 +367,8 @@ function agentByName(name){ return agents.find(a=>a.name===name) || null; }
 
 function fillFocus(c, agent){
   $("#focus-char").innerHTML = `
-    <div class="focus-art"><img src="${c.img}" alt="${c.name}" draggable="false"></div>
-    <div class="focus-char-name">${c.name}</div>`;
+    <div class="focus-art"><img src="${esc(c.img)}" alt="${esc(c.name)}" draggable="false"></div>
+    <div class="focus-char-name">${esc(c.name)}</div>`;
   $("#focus-char").style.setProperty("--c", c.color);
   $("#focus-char").title = "单击推回，恢复阵容";
   $("#focus-name").textContent = c.name;
@@ -478,9 +480,9 @@ function renderConfig(){
     <div class="link-row${c.home?" home-on":""}${expanded?" expanded":""}" style="--c:${c.color}" data-id="${c.id}">
       <div class="link-summary-row">
         <button class="link-summary" type="button" data-act="expand" aria-expanded="${expanded}" aria-controls="link-detail-${c.id}">
-          <span class="link-chip"><img src="${c.img}" alt=""></span>
+          <span class="link-chip"><img src="${esc(c.img)}" alt=""></span>
           <span class="link-identity">
-            <b>${c.name}</b>
+            <b>${esc(c.name)}</b>
           </span>
           <span class="link-brief">
             <b>${esc(charAgentList(c).join(" / ") || "未指定 Agent")}</b>
@@ -525,7 +527,8 @@ function renderConfig(){
         </div>
 
         <div class="link-actions">
-          <button class="btn-mini" data-act="reset">恢复默认</button>
+          <button class="btn-mini" data-act="art">编辑形象</button>
+          ${c.custom ? '<button class="btn-mini" data-act="delete">删除形象</button>' : '<button class="btn-mini" data-act="reset">恢复默认</button>'}
           <button class="btn-mini primary" data-act="test">测试召唤</button>
         </div>
       </div>
@@ -592,7 +595,15 @@ function renderConfig(){
       switchView("stage"); setTimeout(()=>summon(c, first), 120);
     });
 
-    row.querySelector('[data-act="reset"]').addEventListener("click",()=>{
+    row.querySelector('[data-act="art"]').addEventListener("click",()=>openCharacterEditor(c));
+    row.querySelector('[data-act="delete"]')?.addEventListener("click",async ()=>{
+      if(!window.confirm(`删除「${c.name}」？会同时从大厅移除，不会删除 Agent 或原始图片。`)) return;
+      if(!await saveCharacters(characters.filter(x=>x.id!==c.id))) return;
+      if(selected?.c.id === c.id) closeFocus(true);
+      expandedConfigId = null;
+      renderRoster(); renderConfig(); toast("已删除形象");
+    });
+    row.querySelector('[data-act="reset"]')?.addEventListener("click",()=>{
       const d = DEFAULT_CHARACTERS.find(x=>x.id===c.id);
       if(!d) return;
       const idx = characters.indexOf(c);
@@ -608,6 +619,71 @@ function renderConfig(){
       }
       toast(`已恢复 ${d.name} 的默认配置`);
     });
+  });
+}
+/* ================= 自定义形象 ================= */
+let characterDraft = null;
+async function saveCharacters(next){
+  clearTimeout(persistTimer);
+  try {
+    if(!isDesktop || !await window.aether.setConfig({...currentConfig(), characters:next})) {
+      toast("形象保存失败，请检查磁盘空间和目录权限。"); return false;
+    }
+    characters = next;
+    return true;
+  } catch (_) { toast("形象保存失败，请稍后重试。"); return false; }
+}
+function openCharacterEditor(c){
+  if(!isDesktop || !window.aether.importCharacterArt) { toast("请在桌面应用中导入自定义形象。"); return; }
+  characterDraft = c ? {...c} : {id:'custom-'+crypto.randomUUID(), custom:true, img:'', color:'#7c5ce0', name:'', home:true, agents:[], anim:'circle', quotes:[]};
+  $("#character-editor-title").textContent = c ? "编辑形象" : "新增形象";
+  $("#character-name").value = characterDraft.name;
+  $("#character-color").value = characterDraft.color;
+  $("#character-editor-error").textContent = "";
+  $("#character-preview").hidden = !characterDraft.img;
+  $("#character-preview-empty").hidden = !!characterDraft.img;
+  if(characterDraft.img) $("#character-preview").src = characterDraft.img;
+  else $("#character-preview").removeAttribute('src');
+  $("#character-editor").showModal();
+  $("#character-name").focus();
+}
+function bindCharacterEditor(){
+  $("#character-add").addEventListener('click',()=>openCharacterEditor());
+  $("#character-cancel").addEventListener('click',()=>$("#character-editor").close());
+  $("#character-pick").addEventListener('click',async ()=>{
+    const btn = $("#character-pick");
+    btn.disabled = true; $("#character-save").disabled = true;
+    $("#character-editor-error").textContent = "";
+    try {
+      const result = await window.aether.importCharacterArt();
+      if(result.canceled || !$("#character-editor").open) return;
+      if(!result.ok) { $("#character-editor-error").textContent = result.error; return; }
+      characterDraft.img = result.img;
+      $("#character-preview").src = result.img;
+      $("#character-preview").hidden = false;
+      $("#character-preview-empty").hidden = true;
+    } catch (_) { $("#character-editor-error").textContent = "图片导入失败，请重新选择。"; }
+    finally { btn.disabled = false; $("#character-save").disabled = false; }
+  });
+  $("#character-form").addEventListener('submit',async event=>{
+    event.preventDefault();
+    const name = $("#character-name").value.trim();
+    if(!name || !characterDraft.img) { $("#character-editor-error").textContent = "请填写名称并选择透明 PNG 立绘。"; return; }
+    const next = {...characterDraft, name, color:$("#character-color").value};
+    const index = characters.findIndex(c=>c.id===next.id);
+    const list = [...characters];
+    if(index < 0) list.push(next); else list[index] = next;
+    $("#character-save").disabled = true;
+    $("#character-cancel").disabled = true;
+    try {
+      if(!await saveCharacters(list)) { $("#character-editor-error").textContent = "保存失败，尚未应用更改，请重试。"; return; }
+      if(selected?.c.id === next.id) { closeFocus(true); }
+      expandedConfigId = next.id;
+      renderRoster(); renderConfig();
+      $("#character-editor").close();
+      toast(index < 0 ? "形象已添加，可在连接配置中勾选 Agent。" : "形象已更新");
+      document.querySelector(`[data-id="${next.id}"]`)?.scrollIntoView({block:'nearest'});
+    } finally { $("#character-save").disabled = false; $("#character-cancel").disabled = false; }
   });
 }
 /* ================= 召唤演出 + 真实启动 ================= */
@@ -629,7 +705,7 @@ function summon(c, agentName){
   const quote = c.quotes[Math.floor(Math.random()*c.quotes.length)] || "";
   $("#launch-quote").textContent = `「${quote}」`;
   $("#launch-quote").style.setProperty("--c", c.color);
-  $("#launch-char").innerHTML = `<img src="${c.img}" alt="${c.name}">`;
+  $("#launch-char").innerHTML = `<img src="${esc(c.img)}" alt="${esc(c.name)}">`;
   $("#launch-char").style.setProperty("--c", c.color);
   $("#s-app").textContent = label;
   $("#s-path").textContent = target;
@@ -1221,6 +1297,7 @@ async function boot(){
   tickClock();
   setInterval(tickClock, 20000);
   bindStatic();
+  bindCharacterEditor();
 
   // 老配置（v1）读完就落盘成 v2：config-store 会先备份旧文件再写
   if(saved && (Number(saved.version) || 1) < 2) persistSoon();

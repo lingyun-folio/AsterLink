@@ -95,6 +95,7 @@
         <div class="page">
           <h2>连接配置</h2>
           <p class="sub">列表优先展示已添加到主页的星灵。点击任意星灵可展开或收起详细连接配置；改动会即时保存。</p>
+          <div class="character-toolbar"><button class="btn btn-gold" id="character-add" type="button">＋ 新增形象</button><span>导入透明 PNG，打造自己的 AI 伙伴</span></div>
           <div id="link-list"></div>
         </div>
       </section>
@@ -185,6 +186,23 @@
   </div>
 </div>
 
+<dialog id="character-editor" class="character-editor">
+  <form id="character-form">
+    <h2 id="character-editor-title">新增形象</h2>
+    <div class="character-editor-grid">
+      <div class="character-preview"><img id="character-preview" alt="立绘预览" hidden><span id="character-preview-empty">选择透明立绘后预览</span></div>
+      <div>
+        <div class="field"><label for="character-name">形象名称</label><input id="character-name" maxlength="40" required placeholder="例如：我的 DeepSeek 伙伴"></div>
+        <div class="field"><label for="character-color">主题色</label><input id="character-color" type="color" value="#7c5ce0"></div>
+        <button class="btn-mini" id="character-pick" type="button">选择透明 PNG…</button>
+        <p class="art-requirements">仅支持透明背景 PNG，最大 10 MB；宽、高均为 256–4096 像素。推荐竖版全身立绘，约 800 × 1600 像素，人物居中、四周少留白，头脚完整。白底、棋盘格截图不是真透明背景；不会自动抠图。</p>
+        <p class="art-requirements">图片仅保存在本机，导入后可移动原文件。超过 2048 像素的图片会等比缩小。请使用你有权使用的图片。</p>
+      </div>
+    </div>
+    <p id="character-editor-error" role="alert"></p>
+    <div class="character-editor-actions"><button class="btn-mini" id="character-cancel" type="button">取消</button><button class="btn-mini primary" id="character-save" type="submit">保存形象</button></div>
+  </form>
+</dialog>
 <script src="renderer.js"></script>
 </body>
 </html>

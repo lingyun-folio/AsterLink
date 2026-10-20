@@ -10,11 +10,12 @@ A **Windows desktop launcher for AI applications**, built with Electron and vani
 
 ![Character roster](docs/images/roster.png)
 
-> Public source edition 0.3.6 includes AI-assisted MiMo and Lumi characters and a fox app icon. Third-party character illustrations and logos with unverified redistribution permissions are excluded. Screenshots use demo configuration and simulated process states, not live model connections.
+> Public source edition 0.3.7 includes AI-assisted MiMo and Lumi characters and a fox app icon. Third-party character illustrations and logos with unverified redistribution permissions are excluded. Screenshots use demo configuration and simulated process states, not live model connections.
 
 ## Features
 
 - Character roster: click for details, double-click to summon; multiple agents per character.
+- Custom characters: import transparent PNG artwork, edit names and accent colors, and bind agents.
 - Connection settings: choose the home roster, agent mappings, quotes, and animations.
 - Application registry: scan candidates or choose a local executable or shortcut.
 - Process indicators: refresh approximately every five seconds.
@@ -43,6 +44,12 @@ The launcher does not require a model API key. Launched tools retain their own a
 
 ![Connection settings](docs/images/connections.png)
 
+## Custom artwork
+
+Use **Connection Settings → Add Character** in the desktop app. Import a transparent PNG up to **10 MB**, with both dimensions between **256 and 4096 pixels**. A centered, full-body portrait around **800 × 1600** is recommended. White backgrounds and painted checkerboards are not transparency; automatic background removal is not included.
+
+Imported images are copied to local app data, so moving the original file does not break the character. Characters appear in the roster and connection settings and remain available after restarting. Built-in artwork can be replaced or reset; custom characters can be edited or deleted. See the [illustrated guide](docs/CUSTOM_CHARACTERS.md) for details.
+
 ## Stack and development
 
 Electron 33, HTML/CSS/JavaScript, Node.js file and process APIs, contextBridge/IPC, local JSON persistence, Windows tasklist/shell integration, and electron-builder/NSIS. No React, Vue, business backend, or database is required.
@@ -52,6 +59,7 @@ Run in `app/`:
 ```powershell
 npm run check
 npm run test:config
+npm run test:art
 npm run dist
 ```
 

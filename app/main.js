@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const { spawn, execFile } = require('child_process');
 const store = require('./config-store');
+const { importArtwork } = require('./character-art');
 
 // 延用旧配置目录与安装标识，品牌升级后保留阵容、路径和单实例行为。
 app.setName('星契 AsterLink');
@@ -648,6 +649,16 @@ async function pickTargetFile() {
 }
 
 /* ===== 配置 ===== */
+ipcMain.handle('character:import-art', async () => {
+  try {
+    const result = await dialog.showOpenDialog(win, {
+      title: '选择透明 PNG 立绘（最大 10 MB）',
+      properties: ['openFile'], filters: [{ name: '透明 PNG 立绘', extensions: ['png'] }],
+    });
+    if (result.canceled || !result.filePaths.length) return { canceled: true };
+    return { ok: true, ...importArtwork(result.filePaths[0], app.getPath('userData')) };
+  } catch (error) { return { ok: false, error: error.message }; }
+});
 ipcMain.handle('config:get', () => {
   cfgCache = store.load();
   return cfgCache;
@@ -655,6 +666,7 @@ ipcMain.handle('config:get', () => {
 ipcMain.handle('config:set', (_e, cfg) => {
   const prevLayout = miniLayout();
   const ok = store.save(cfg);
+  if (!ok) return false;
   cfgCache = cfg;
   // 竖向/横向切换后回到该方向的默认位置，否则窗口会停在上一个方向的位置
   if (miniLayout() !== prevLayout) { miniX = null; miniY = null; }

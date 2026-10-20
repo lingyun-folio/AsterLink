@@ -1,7 +1,7 @@
 {
   "name": "asterlink",
   "productName": "星契 AsterLink",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "description": "星契 · AsterLink — 选择你的 AI 伙伴，一键召唤本地 Agent",
   "author": "lingy",
   "main": "main.js",
@@ -12,7 +12,8 @@
     "check": "node ../scripts/check.cjs",
     "test:config": "node --test ../scripts/config-store.test.cjs",
     "capture:main": "electron ../scripts/_intro-shot.cjs",
-    "capture:mini": "electron ../scripts/_intro-mini.cjs"
+    "capture:mini": "electron ../scripts/_intro-mini.cjs",
+    "test:art": "node --test ../scripts/character-art.test.cjs"
   },
   "devDependencies": {
     "electron": "^33.0.0",
@@ -43,7 +44,8 @@
       "icons/app-1024.png",
       "icons/app.ico",
       "icons/app.svg",
-      "icons/tray.png"
+      "icons/tray.png",
+      "character-art.js"
     ],
     "win": {
       "icon": "icons/app.ico",

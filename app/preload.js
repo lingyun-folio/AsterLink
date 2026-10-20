@@ -4,6 +4,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('aether', {
   getConfig: () => ipcRenderer.invoke('config:get'),
   setConfig: cfg => ipcRenderer.invoke('config:set', cfg),
+  importCharacterArt: () => ipcRenderer.invoke('character:import-art'),
   launch: payload => ipcRenderer.invoke('agent:launch', payload),
   getLogin: () => ipcRenderer.invoke('login:get'),
   setLogin: on => ipcRenderer.invoke('login:set', on),

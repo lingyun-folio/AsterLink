@@ -4,7 +4,7 @@ A character-based desktop launcher for AI companions
 
 AsterLink turns frequently used AI applications into companions you can summon from a shared desktop hub. An anime character roster, summoning animations, and a compact floating launcher bring a more personal experience to opening and switching between AI tools.
 
-> Project snapshot: October 20, 2026 · Source version 0.3.6 · Currently targets Windows. The public source edition uses AsterLink / 星契 branding, MiMo and Lumi characters, and a fox app icon. Legacy internal installation identifiers and the configuration path remain for upgrade compatibility. Windows x64 installer and portable editions are available from GitHub Releases.
+> Project snapshot: October 20, 2026 · Source version 0.3.7 · Currently targets Windows. The public source edition uses AsterLink / 星契 branding, MiMo and Lumi characters, and a fox app icon. Legacy internal installation identifiers and the configuration path remain for upgrade compatibility. Windows x64 installer and portable editions are available from GitHub Releases.
 
 ![Figure 1. The character roster. One character can appear on multiple cards when assigned to different agents.](../images/roster.png)
 
