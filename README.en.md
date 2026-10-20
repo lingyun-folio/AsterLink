@@ -23,6 +23,10 @@ A **Windows desktop launcher for AI applications**, built with Electron and vani
 
 This is a local application launcher. It does not provide unified chat, model API integrations, or automated multi-agent orchestration. Install and configure target applications separately. CC Switch is an optional external tool and is not bundled.
 
+## Download
+
+Download the Windows x64 installer or portable edition from [GitHub Releases](https://github.com/lingyun-folio/AsterLink/releases/latest).
+
 ## Getting started
 
 Requirements: Windows 10/11, Node.js 22 or newer, and npm.
@@ -51,7 +55,7 @@ npm run test:config
 npm run dist
 ```
 
-Outputs are generated under `app/dist/`. Publish binaries as GitHub Release assets, not source commits. No code-signing certificate is configured. Windows CI runs source/resource checks and configuration tests; it does not cover the complete GUI or compatibility of every external application.
+Outputs are generated under `app/dist/`. No code-signing certificate is configured. Windows CI runs source/resource checks and configuration tests; it does not cover the complete GUI or compatibility of every external application.
 
 ## Limitations
 
@@ -60,7 +64,6 @@ Outputs are generated under `app/dist/`. Publish binaries as GitHub Release asse
 - Reopening relies on the target application's single-instance behavior.
 - The full animation currently dispatches launch after about `4100 × animScale` milliseconds.
 - Quoted-path normalization, shortcut argument parsing, and save-error reporting remain improvement areas.
-- The legacy `%APPDATA%/星灵枢纽 AetherLink/config.json` path is retained for upgrade compatibility. Never commit user configuration.
 
 ## Contributing and license
 

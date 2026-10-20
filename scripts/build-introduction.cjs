@@ -5,7 +5,7 @@ const img = (file, caption, small=false) => ({img:file, caption, small});
 const zh = {
  lang:'zh-CN', file:'项目介绍-中文', title:'星契项目介绍', subtitle:'AsterLink · 角色化 AI 桌面启动器', intro:'把常用的 AI 应用化作可以召唤的伙伴，在一个桌面入口里完成选择、启动与切换。星契结合二次元角色大厅、召唤演出和常驻小窗，让日常使用多个 AI 工具的过程更直观，也更有陪伴感。',
  blocks:[
- {note:'项目快照：2026 年 10 月 20 日 · 源码版本 0.3.6 · 当前面向 Windows。公开源码版使用星契 / AsterLink 品牌，附带 MiMo、Lumi 角色与小灵狐图标；旧内部安装标识及配置目录保留以兼容升级。历史 0.3.5 安装包包含未确认授权的素材，不属于公开发行内容。'},
+ {note:'项目快照：2026 年 10 月 20 日 · 源码版本 0.3.6 · 当前面向 Windows。公开源码版使用星契 / AsterLink 品牌，附带 MiMo、Lumi 角色与小灵狐图标；旧内部安装标识及配置目录保留以兼容升级。Windows x64 安装版和便携版可从 GitHub Releases 下载。'},
  img('../images/roster.png','图 1 角色大厅。一个角色可以绑定多个 Agent，并以不同卡片展示。'),
  {h:'01 项目定位与用途'},
  {p:'星契适合日常同时使用编程助手、通用对话工具和其他 AI 桌面应用的用户。它把分散的启动入口集中起来，让用户通过角色识别常用工具，查看进程状态，并在主界面收起后继续通过悬浮小窗访问已召唤的应用。'},
@@ -43,7 +43,7 @@ const zh = {
 const en = {
  lang:'en',file:'Project-Introduction-English',title:'AsterLink Project Overview',subtitle:'A character-based desktop launcher for AI companions',intro:'AsterLink turns frequently used AI applications into companions you can summon from a shared desktop hub. An anime character roster, summoning animations, and a compact floating launcher bring a more personal experience to opening and switching between AI tools.',
  blocks:[
- {note:'Project snapshot: October 20, 2026 · Source version 0.3.6 · Currently targets Windows. The public source edition uses AsterLink / 星契 branding, MiMo and Lumi characters, and a fox app icon. Legacy internal installation identifiers and the configuration path remain for upgrade compatibility. Previous 0.3.5 binaries contain assets with unverified redistribution permissions and are excluded from public distribution.'},
+ {note:'Project snapshot: October 20, 2026 · Source version 0.3.6 · Currently targets Windows. The public source edition uses AsterLink / 星契 branding, MiMo and Lumi characters, and a fox app icon. Legacy internal installation identifiers and the configuration path remain for upgrade compatibility. Windows x64 installer and portable editions are available from GitHub Releases.'},
  img('../images/roster.png','Figure 1. The character roster. One character can appear on multiple cards when assigned to different agents.'),
  {h:'01 Purpose and use cases'},
  {p:'AsterLink is designed for people who regularly use several AI desktop tools, such as coding assistants and general-purpose chat applications. It brings their launch points together, associates tools with recognizable characters, displays process status, and keeps summoned tools accessible after the main window is hidden.'},

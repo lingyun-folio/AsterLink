@@ -23,6 +23,10 @@
 
 星契管理的是本机应用的启动与重新打开。当前不包含统一聊天、模型 API 接入或多 Agent 自动编排；使用目标工具仍需自行安装并完成账户配置。CC Switch 是可选外部工具，未随项目分发。
 
+## 安装
+
+从 [GitHub Releases](https://github.com/lingyun-folio/AsterLink/releases/latest) 下载 Windows x64 安装版或便携版。
+
 ## 快速开始
 
 开发环境：Windows 10/11、Node.js 22 或更新版本、npm。
@@ -63,7 +67,7 @@ npm run test:config
 npm run dist
 ```
 
-产物输出到 `app/dist/`。安装包应发布到 GitHub Releases，不要提交到源码仓库。当前未配置代码签名证书。
+产物输出到 `app/dist/`。当前未配置代码签名证书。
 
 项目附带 Windows CI，检查源码与资源引用、运行配置持久化测试。它不等同于完整的图形界面和第三方应用兼容性测试。
 
@@ -85,7 +89,6 @@ README.en.md   English documentation
 - 唤醒依赖目标应用的单实例行为；部分应用可能打开新窗口。
 - 当前完整演出在约 `4100 × animScale` 毫秒后才提交启动请求。
 - 路径首尾引号、快捷方式参数解析和保存失败反馈仍待完善。
-- 为兼容旧版本，配置保存在 `%APPDATA%/星灵枢纽 AetherLink/config.json`；不要把此文件提交到 GitHub。
 
 ## 参与与许可
 
