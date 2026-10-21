@@ -4,7 +4,33 @@ const path = require('path');
 const fs = require('fs');
 const { spawn, execFile } = require('child_process');
 const store = require('./config-store');
+const { createLoginItems } = require('./login-items');
 const { importArtwork } = require('./character-art');
+const { dedupeMiniItems } = require('./mini-targets');
+const { createIconReader, findPackagedIcon } = require('./agent-icons');
+const { importAgentIcon, readAgentIcon: readCustomAgentIcon } = require('./custom-agent-icons');
+const readAgentIcon = createIconReader(async (file, options) => {
+  const packagedIcon = await findPackagedIcon(file);
+  if (packagedIcon) {
+    const image = nativeImage.createFromPath(packagedIcon);
+    if (!image.isEmpty()) return image;
+  }
+  return app.getFileIcon(file, options);
+});
+let agentIcons = {};
+let iconRequest = 0;
+
+async function refreshAgentIcons(cfg) {
+  const request = ++iconRequest;
+  const icons = Object.fromEntries(await Promise.all((cfg?.agents || []).filter(a => a?.name).map(async a => [a.name, readCustomAgentIcon(a.customIcon, app.getPath('userData')) || await readAgentIcon(a.path)])));
+  if (request !== iconRequest) return agentIcons;
+  if (JSON.stringify(icons) !== JSON.stringify(agentIcons)) {
+    agentIcons = icons;
+    broadcast('agents:icons', icons);
+    pushMiniData();
+  }
+  return agentIcons;
+}
 
 // 延用旧配置目录与安装标识，品牌升级后保留阵容、路径和单实例行为。
 app.setName('星契 AsterLink');
@@ -13,6 +39,7 @@ app.setAppUserModelId('com.lingy.aetherlink');
 
 const START_HIDDEN_ARG = '--hidden';
 const startHidden = process.argv.includes(START_HIDDEN_ARG);
+const loginItems = createLoginItems(app);
 
 let win = null;
 let tray = null;
@@ -221,12 +248,9 @@ function charAgents(c) {
   return (c && typeof c.agent === 'string' && c.agent) ? [c.agent] : [];
 }
 
-/* Agent 名 → 图标文件（小写、空格换连字符）；没有对应图标时返回空串，由界面退化显示 */
+/* 本机程序图标的内存缓存；读取失败由界面显示首字母。 */
 function agentIconOf(name) {
-  const slug = String(name || '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-  if (!slug) return '';
-  const file = path.join(__dirname, 'agent-icons', slug + '.png');
-  return fs.existsSync(file) ? `agent-icons/${slug}.png` : '';
+  return agentIcons[name] || '';
 }
 
 function miniLayout() {
@@ -252,7 +276,7 @@ function miniPayload() {
     }
   }
   const pinned = !!(cfg.settings && cfg.settings.miniPinned);
-  return { items, layout: miniLayout(), pinned };
+  return { items: dedupeMiniItems(items, name => resolveAgentPath(cfg, name)), layout: miniLayout(), pinned };
 }
 
 /* 位置默认可选：竖向贴右侧居中，横向贴底部居中 */
@@ -493,7 +517,7 @@ function buildTrayMenu() {
     {
       label: '开机自启',
       type: 'checkbox',
-      checked: app.getLoginItemSettings().openAtLogin,
+      checked: loginItems.get().openAtLogin,
       click: mi => setLoginItem(mi.checked),
     },
     { type: 'separator' },
@@ -515,14 +539,10 @@ function createTray() {
 
 /* ===== 开机自启 ===== */
 function setLoginItem(on) {
-  app.setLoginItemSettings({
-    openAtLogin: !!on,
-    path: process.execPath,
-    // 开发态启动的是 electron，需要带上应用目录；打包后 exe 即应用本身
-    args: app.isPackaged ? [START_HIDDEN_ARG] : [app.getAppPath(), START_HIDDEN_ARG],
-  });
-  refreshTrayMenu(); // 同步托盘菜单勾选
-  return { openAtLogin: app.getLoginItemSettings().openAtLogin };
+  const state = loginItems.set(on);
+  refreshTrayMenu();
+  broadcast('login:state', state);
+  return state;
 }
 
 /* ===== 单实例（托盘驻留时避免开出第二个） ===== */
@@ -541,6 +561,7 @@ if (!gotLock) {
     Menu.setApplicationMenu(null); // 无边框界面自带标题栏，去掉默认菜单栏
     createTray();
     createWindow();
+    refreshAgentIcons(cfg).catch(() => {});
     app.on('activate', () => showWindow());
     // 窗口先出来，再静默预热常驻 agent（开机自启时同样生效）
     setTimeout(() => prewarmResidents(store.load()), 900);
@@ -649,6 +670,13 @@ async function pickTargetFile() {
 }
 
 /* ===== 配置 ===== */
+ipcMain.handle('agents:icon:pick', async () => {
+  try {
+    const result = await dialog.showOpenDialog(win, { title: '选择应用图标（PNG，最大 2 MB）', properties: ['openFile'], filters: [{ name: 'PNG 图标', extensions: ['png'] }] });
+    if (result.canceled || !result.filePaths.length) return { canceled: true };
+    return { ok: true, ...importAgentIcon(result.filePaths[0], app.getPath('userData')) };
+  } catch (error) { return { ok: false, error: error.message }; }
+});
 ipcMain.handle('character:import-art', async () => {
   try {
     const result = await dialog.showOpenDialog(win, {
@@ -668,6 +696,7 @@ ipcMain.handle('config:set', (_e, cfg) => {
   const ok = store.save(cfg);
   if (!ok) return false;
   cfgCache = cfg;
+  refreshAgentIcons(cfg).catch(() => {});
   // 竖向/横向切换后回到该方向的默认位置，否则窗口会停在上一个方向的位置
   if (miniLayout() !== prevLayout) { miniX = null; miniY = null; }
   refreshTrayMenu(); // 主页阵容可能变化，刷新「快速召唤」
@@ -688,10 +717,11 @@ ipcMain.on('win:close', () => win && win.close()); // close 事件里按 closeTo
 
 /* ===== 托盘驻留 / 开机自启 ===== */
 ipcMain.on('tray:behavior', (_e, on) => { closeToTray = !!on; });
-ipcMain.handle('login:get', () => ({ openAtLogin: app.getLoginItemSettings().openAtLogin }));
+ipcMain.handle('login:get', () => loginItems.get());
 ipcMain.handle('login:set', (_e, on) => setLoginItem(on));
 
 /* ===== 运行状态 ===== */
+ipcMain.handle('agents:icons:get', () => refreshAgentIcons(cfgCache || store.load()));
 ipcMain.handle('agents:state:get', async () => {
   if (!Object.keys(agentState).length) await refreshAgentState();
   return agentState;

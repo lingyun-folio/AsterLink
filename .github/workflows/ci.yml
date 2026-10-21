@@ -21,4 +21,8 @@ jobs:
       - run: npm run check
       - run: npm run test:config
       - run: npm run test:art
+      - run: npm run test:mini
+      - run: npm run test:icons
 
+      - run: npm run test:login
+      - run: node --test ../scripts/default-art.test.cjs

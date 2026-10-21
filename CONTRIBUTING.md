@@ -18,3 +18,7 @@
 
 Discuss substantial features in an issue first. Use Windows and Node.js 22+, run `npm ci` in `app/`, and run `npm run check`, `npm run test:config`, and `npm run test:art` before submitting. Include reproduction steps or validation notes, remove personal data from reports, and document provenance and redistribution permissions for new assets. Do not commit dependencies, binaries, local archives, or user configuration. Code contributions use the project's MIT license.
 
+
+## Windows 安装包构建
+
+沿用标准 electron-builder / NSIS，在 `app/` 执行 `npm run dist`。默认输出到工作区旁的 `AsterLink-build/` 普通目录，避免新文件继承工作区的低完整性标签。需要放回工作区时，同一磁盘内使用移动保留文件安全属性，不要重新创建或覆盖成继承低完整性的新文件。产物应以普通用户的中完整性运行；发布前检查完整性标签，并验证覆盖安装时能关闭托盘中的旧进程。不要额外封装安装器，也不要通过关闭系统防护处理安装错误。

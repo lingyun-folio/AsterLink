@@ -21,13 +21,37 @@ function fixture(t, { alpha = [0, 255], width = 800, height = 1600, empty = fals
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../app/character-art.js'), 'utf8'), {
     module, Buffer, require: name => name === 'electron' ? { nativeImage: { createFromBuffer: () => image } } : require(name),
   });
-  return { dir, source, import: () => module.exports.importArtwork(source, path.join(dir, 'profile')), resized: () => resized };
+  return { dir, source, import: () => module.exports.importArtwork(source, path.join(dir, 'profile')), resized: () => resized, recommend: module.exports.recommendColor };
 }
 test('import copies artwork to a managed local URL that survives moving the source', t => {
   const f = fixture(t), result = f.import();
   fs.unlinkSync(f.source);
   assert(fs.existsSync(fileURLToPath(result.img)));
   assert.equal(result.width, 800); assert.equal(result.height, 1600);
+  assert.match(result.suggestedColor, /^#[0-9a-f]{6}$/);
+});
+
+function pixels(groups) {
+  return Buffer.from(groups.flatMap(([count, rgba]) => Array.from({ length: count }, () => [rgba[2], rgba[1], rgba[0], rgba[3] ?? 255]).flat()));
+}
+test('recommend the dominant chromatic family while ignoring transparent, white and black pixels', t => {
+  const { recommend } = fixture(t);
+  const color = recommend(pixels([[100, [255, 0, 0, 0]], [100, [255, 255, 255]], [100, [0, 0, 0]], [30, [20, 80, 220]], [5, [230, 30, 20]]]));
+  const rgb = color.slice(1).match(/../g).map(v => parseInt(v, 16));
+  assert(rgb[2] > rgb[0] * 2 && rgb[2] > rgb[1]);
+  assert(rgb[2] >= 180, 'glow should remain visible');
+});
+test('neutral and almost-transparent artwork falls back to purple', t => {
+  const { recommend } = fixture(t);
+  assert.equal(recommend(pixels([[20, [128, 128, 128]], [20, [255, 0, 0, 20]]])), '#7c5ce0');
+  assert.equal(recommend(Buffer.alloc(0)), '#7c5ce0');
+  assert.equal(recommend(pixels([[2000, [128, 128, 128]], [1, [255, 0, 0]]])), '#7c5ce0');
+});
+test('neighboring red shades combine across the hue boundary instead of producing a muddy average', t => {
+  const { recommend } = fixture(t);
+  const color = recommend(pixels([[20, [230, 10, 15]], [20, [230, 15, 10]], [30, [20, 190, 40]]]));
+  const rgb = color.slice(1).match(/../g).map(v => parseInt(v, 16));
+  assert(rgb[0] > rgb[1] * 2 && rgb[0] > rgb[2] * 2);
 });
 test('reject opaque backgrounds and completely invisible artwork', t => {
   assert.throws(fixture(t, { alpha: [255, 255] }).import, /透明背景/);

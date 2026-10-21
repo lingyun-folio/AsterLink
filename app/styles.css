@@ -246,6 +246,7 @@
     transition:transform .18s ease;
   }
   .agent-badge img{width:100%;height:100%;display:block;border-radius:22%}
+  .agent-initial{width:100%;height:100%;display:flex;align-items:center;justify-content:center;border-radius:22%;background:var(--menu-bg);border:1px solid var(--line);color:var(--text);font-size:18px;font-weight:700;box-sizing:border-box}
   .char-card:hover .agent-badge{transform:translateY(-2px) scale(1.05)}
   /* 该 Agent 正在运行：徽标顺时针慢转，作为「活着」的状态指示 */
   @keyframes badgeSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
@@ -784,7 +785,7 @@
   .agent-list{display:flex;flex-direction:column;gap:10px}
   .agent-list[hidden]{display:none}
   .agent-row{
-    display:flex;align-items:center;gap:10px;
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
     border:1px solid var(--line);border-radius:10px;padding:10px 12px;
     background:var(--field-bg);
   }
@@ -802,6 +803,12 @@
   }
   .agent-row .ar-path-label{flex:none;font-size:11px;color:var(--muted);letter-spacing:.1em}
   .agent-row .ar-save{flex:none}
+  .ar-icon-controls{flex-basis:100%;display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:10px}
+  .ar-icon-preview{width:32px;height:32px;flex:none;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:8px;background:var(--menu-bg);font-weight:700;overflow:hidden}
+  .ar-icon-preview img{width:100%;height:100%;object-fit:contain}
+  .ar-icon-mode,.ar-icon-help{font-size:11px;color:var(--muted)}
+  .ar-icon-help{flex:1;min-width:200px;line-height:1.6}
+  .ar-icon-controls [hidden]{display:none}
   .agent-row .ar-del{flex:none}
   .agent-row .ar-del:hover{background:#E34B5B;color:#fff;border-color:#E34B5B}
   .set-agent .ab-hint{font-size:11.5px;color:var(--muted);line-height:1.7;margin:-2px 2px 0}
@@ -905,5 +912,7 @@
 .art-requirements{font-size:12px;line-height:1.75;color:var(--muted)}
 #character-editor-error{min-height:20px;font-size:13px;color:#e97563}
 .character-editor-actions{display:flex;justify-content:flex-end;gap:12px}
+.character-color-tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.character-preview{box-shadow:0 0 28px color-mix(in srgb,var(--preview-color,#7c5ce0) 28%,transparent);transition:box-shadow .2s}
 .character-editor button:disabled{opacity:.5;cursor:wait}
 @media(max-width:600px){.character-editor-grid{grid-template-columns:1fr}.character-preview{height:180px}}

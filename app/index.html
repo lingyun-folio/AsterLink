@@ -193,7 +193,7 @@
       <div class="character-preview"><img id="character-preview" alt="立绘预览" hidden><span id="character-preview-empty">选择透明立绘后预览</span></div>
       <div>
         <div class="field"><label for="character-name">形象名称</label><input id="character-name" maxlength="40" required placeholder="例如：我的 DeepSeek 伙伴"></div>
-        <div class="field"><label for="character-color">主题色</label><input id="character-color" type="color" value="#7c5ce0"></div>
+        <div class="field"><label for="character-color">光晕主题色</label><div class="character-color-tools"><input id="character-color" type="color" value="#7c5ce0"><button class="btn-mini" id="character-use-color" type="button" disabled>使用立绘推荐色</button></div><p id="character-color-hint" class="hint" aria-live="polite">导入立绘后自动推荐，仍可手动调色。</p></div>
         <button class="btn-mini" id="character-pick" type="button">选择透明 PNG…</button>
         <p class="art-requirements">仅支持透明背景 PNG，最大 10 MB；宽、高均为 256–4096 像素。推荐竖版全身立绘，约 800 × 1600 像素，人物居中、四周少留白，头脚完整。白底、棋盘格截图不是真透明背景；不会自动抠图。</p>
         <p class="art-requirements">图片仅保存在本机，导入后可移动原文件。超过 2048 像素的图片会等比缩小。请使用你有权使用的图片。</p>

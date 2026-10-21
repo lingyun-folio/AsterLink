@@ -1,6 +1,6 @@
 /* 小窗渲染验证：直接加载 mini.html，推入模拟数据，按回报尺寸调整窗口并截图。
    Run from app/: npm run capture:mini */
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, nativeImage } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -12,12 +12,11 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 
 const ITEMS = [
   { key: 'mimo::Codex', charId: 'mimo', name: '炽羽 · MiMo', agent: 'Codex', icon: '', running: true },
-  { key: 'mimo::Claude', charId: 'mimo', name: '炽羽 · MiMo', agent: 'Claude', icon: '', running: false },
-  { key: 'deepseek::DeepSeek Harness', charId: 'deepseek', name: '深语 · DeepSeek', agent: 'DeepSeek Harness', icon: '', running: true },
-  { key: 'glm::WorkBuddy', charId: 'glm', name: '青函 · GLM', agent: 'WorkBuddy', icon: '', running: true },
+  { key: 'deepseek::DeepSeek Harness', charId: 'deepseek', name: '深语 · DeepSeek', agent: 'DeepSeek Harness', icon: '', running: false },
 ];
 
 app.whenReady().then(async () => {
+  ITEMS[0].icon = nativeImage.createFromPath(path.join(APP_DIR, 'icons/app.png')).resize({width:128,height:128}).toDataURL();
   let win = null;
   ipcMain.on('mini:resize', (_e, size) => {
     if (!win || win.isDestroyed() || !size) return;

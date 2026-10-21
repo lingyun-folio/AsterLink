@@ -1,7 +1,7 @@
 {
   "name": "asterlink",
   "productName": "星契 AsterLink",
-  "version": "0.3.7",
+  "version": "0.3.9",
   "description": "星契 · AsterLink — 选择你的 AI 伙伴，一键召唤本地 Agent",
   "author": "lingy",
   "main": "main.js",
@@ -13,7 +13,10 @@
     "test:config": "node --test ../scripts/config-store.test.cjs",
     "capture:main": "electron ../scripts/_intro-shot.cjs",
     "capture:mini": "electron ../scripts/_intro-mini.cjs",
-    "test:art": "node --test ../scripts/character-art.test.cjs"
+    "test:art": "node --test ../scripts/character-art.test.cjs",
+    "test:mini": "node --test ../scripts/mini-targets.test.cjs",
+    "test:icons": "node --test ../scripts/agent-icons.test.cjs ../scripts/custom-agent-icons.test.cjs",
+    "test:login": "node --test ../scripts/login-items.test.cjs"
   },
   "devDependencies": {
     "electron": "^33.0.0",
@@ -25,7 +28,7 @@
       "mirror": "https://npmmirror.com/mirrors/electron/"
     },
     "directories": {
-      "output": "dist"
+      "output": "../../AsterLink-build"
     },
     "files": [
       "main.js",
@@ -45,7 +48,11 @@
       "icons/app.ico",
       "icons/app.svg",
       "icons/tray.png",
-      "character-art.js"
+      "character-art.js",
+      "mini-targets.js",
+      "agent-icons.js",
+      "custom-agent-icons.js",
+      "login-items.js"
     ],
     "win": {
       "icon": "icons/app.ico",

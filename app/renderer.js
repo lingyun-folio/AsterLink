@@ -1,11 +1,11 @@
 /* 星契 · AsterLink — 渲染进程 */
-const ART = "art/"; // Public edition uses project-generated artwork.
+const ART = "art/"; // Bundled artwork has per-file licenses; see docs/ARTWORK.md.
 // Older local configurations may refer to artwork omitted from the public edition.
 document.addEventListener("error", event => {
   const img = event.target;
   if (img instanceof HTMLImageElement && /^(art\/|file:)/.test(img.getAttribute("src") || "")
-      && img.getAttribute("src") !== ART + "lumi.png") {
-    img.src = ART + "lumi.png";
+      && img.getAttribute("src") !== ART + "mystery.png") {
+    img.src = ART + "mystery.png";
   }
 }, true);
 const isDesktop = !!(window.aether && window.aether.launch);
@@ -17,98 +17,98 @@ const $$ = s => [...document.querySelectorAll(s)];
 const DEFAULT_CHARACTERS = [
   {
     id:"deepseek", name:"深语 · DeepSeek",
-    color:"#4E86D8", img:ART+"lumi.png",
+    color:"#4E86D8", img:ART+"Deepseek.png",
     agent:"DeepSeek Harness",
     anim:"circle", home:false,
     quotes:["深海的数据，已为你调齐。","出发吧，DeepSeek Harness 已经在等了。","今天想从哪里开始？"]
   },
   {
     id:"claude", name:"暖昼 · Claude",
-    color:"#D97A52", img:ART+"lumi.png",
+    color:"#D97A52", img:ART+"mystery.png",
     agent:"Claude",
     anim:"streak", home:false,
     quotes:["阳光正好，来干活吧。","别急，我先把思路理一理。","交给我，慢慢来比较快。"]
   },
   {
     id:"chatgpt", name:"星璇 · ChatGPT",
-    color:"#A08CE8", img:ART+"lumi.png",
+    color:"#A08CE8", img:ART+"mystery.png",
     agent:"",
     anim:"warp", home:false,
     quotes:["星璇就位，随时可以开始。","把问题给我，答案很快就来。","今天也一起创造点什么吧。"]
   },
   {
     id:"gemini", name:"双子 · Gemini",
-    color:"#7C5CE0", img:ART+"lumi.png",
+    color:"#7C5CE0", img:ART+"mystery.png",
     agent:"",
     anim:"circle", home:false,
     quotes:["两颗星，一起想。","灵感这种东西，我这里有备份。","让我们并行处理吧。"]
   },
   {
     id:"kimi", name:"月见 · Kimi",
-    color:"#8FA8D8", img:ART+"lumi.png",
+    color:"#8FA8D8", img:ART+"mystery.png",
     agent:"",
     anim:"streak", home:false,
     quotes:["月色安静，思路清晰。","长文档就放心交给我。","夜里也随时在。"]
   },
   {
     id:"qwen", name:"云绮 · Qwen",
-    color:"#5C5CBE", img:ART+"lumi.png",
+    color:"#5C5CBE", img:ART+"mystery.png",
     agent:"",
     anim:"warp", home:false,
     quotes:["云端的算力，随叫随到。","文档、翻译、代码，我都可以。","要一起上云看看吗？"]
   },
   {
     id:"glm", name:"青函 · GLM",
-    color:"#6B72A8", img:ART+"lumi.png",
+    color:"#6B72A8", img:ART+"mystery.png",
     agent:"",
     anim:"circle", home:false,
     quotes:["知识之书，已经翻开了。","需要我念一段咒语吗？","文献和代码都在掌握中。"]
   },
   {
     id:"grok", name:"赤刃 · Grok",
-    color:"#C0555C", img:ART+"lumi.png",
+    color:"#C0555C", img:ART+"mystery.png",
     agent:"",
     anim:"streak", home:false,
     quotes:["宇宙级难题？正合我意。","幽默感和算力，我都有。","放马过来吧。"]
   },
   {
     id:"mistral", name:"焰风 · Mistral",
-    color:"#E07048", img:ART+"lumi.png",
+    color:"#E07048", img:ART+"mystery.png",
     agent:"",
     anim:"warp", home:false,
     quotes:["法式效率，现在出发。","灵感像南风一样到了。","来杯咖啡的功夫就能搞定。"]
   },
   {
     id:"muse", name:"白绒 · Muse",
-    color:"#8FB4E8", img:ART+"lumi.png",
+    color:"#8FB4E8", img:ART+"mystery.png",
     agent:"",
     anim:"circle", home:false,
     quotes:["……困困的，但可以陪你。","想象力无限，借你一点。","软软的，也能想很深的问题。"]
   },
   {
     id:"seed", name:"种子 · Seed",
-    color:"#6E7BE8", img:ART+"lumi.png",
+    color:"#6E7BE8", img:ART+"mystery.png",
     agent:"",
     anim:"streak", home:false,
     quotes:["灵感发芽啦！","今天想种下什么想法？","好奇心是种子，我来浇水。"]
   },
   {
     id:"minimax", name:"海螺 · MiniMax",
-    color:"#E8896A", img:ART+"lumi.png",
+    color:"#E8896A", img:ART+"mystery.png",
     agent:"",
     anim:"warp", home:false,
     quotes:["出发！今天也要元气满满！","小小的身体，大大的算力。","海螺虽小，声音很响哦。"]
   },
   {
     id:"ernie", name:"文心 · ERNIE",
-    color:"#4A55B8", img:ART+"lumi.png",
+    color:"#4A55B8", img:ART+"mystery.png",
     agent:"",
     anim:"circle", home:false,
     quotes:["文献都整理好了……咳，一起看吧。","知识的点滴，我来汇聚。","慢慢来，答案都在书里。"]
   },
   {
     id:"hunyuan", name:"元宝 · Hunyuan",
-    color:"#C94F45", img:ART+"lumi.png",
+    color:"#C94F45", img:ART+"mystery.png",
     agent:"",
     anim:"streak", home:false,
     quotes:["账算得清，活也办得妥。","有什么要办的，尽管说。","家大业大，办事利落。"]
@@ -136,6 +136,7 @@ let agents = [];       // agent 注册表：[{ name, path, resident }]，设置�
 let characters = [];
 let selected = null;   // 聚焦查看的卡片：{ c, agent }
 let agentState = {};   // 各 Agent 进程是否在跑：{ [name]: boolean }，由主进程轮询推送
+let agentIcons = {};
 let launching = false;
 let animScale = 1;
 let closeToTray = true; // 关闭窗口后驻留系统托盘（主进程也读配置里的同名项）
@@ -154,11 +155,10 @@ function charAgentList(c){
 // 迁移成新结构：删掉老的 agent 字段，统一成 agents 数组。
 function normalizeCharacter(c){
   const { agent, ...rest } = c || {};
-  // Migrate bundled historical artwork and the temporary shared fox image.
-  // Preserve unrelated custom paths; missing images fall back through the handler above.
-  const previousArtwork = /^art\/(?:companion|ChatGPT|Claude|Deepseek|Gemini|GLM|Grok|Hunyuan|Kimi|MiMo|minimax|Mistral|Muse|Qwen|Seed|文心一言)\.png$/i;
-  if(previousArtwork.test(String(rest.img || ""))) {
-    rest.img = ART + (rest.id === "mimo" ? "MiMo.png" : "lumi.png");
+  // Upgrade built-in defaults; imported/custom character artwork stays intact.
+  const previousArtwork = /^art\/(?:companion|lumi|mystery|ChatGPT|Claude|Deepseek|Gemini|GLM|Grok|Hunyuan|Kimi|MiMo|minimax|Mistral|Muse|Qwen|Seed|文心一言)\.png$/i;
+  if(!rest.custom && previousArtwork.test(String(rest.img || ""))) {
+    rest.img = ART + (rest.id === "mimo" ? "MiMo.png" : rest.id === "deepseek" ? "Deepseek.png" : "mystery.png");
   }
   return { ...rest, agents: charAgentList(c) };
 }
@@ -201,22 +201,41 @@ function rosterCards(){
   return out;
 }
 
-/* Agent 名称 → 图标文件名：小写、空格换连字符（DeepSeek Harness → deepseek-harness.png） */
+/* 图标来自本机启动目标，不随配置保存或打包。 */
 function agentIcon(name){
-  const slug = String(name || "").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
-  return slug ? `agent-icons/${slug}.png` : "";
+  return agentIcons[name] || "";
+}
+function badgeContent(agent){
+  const icon = agentIcon(agent);
+  return icon ? `<img src="${esc(icon)}" alt="${esc(agent)}" draggable="false">` : `<span class="agent-initial">${esc(agent.slice(0,1).toUpperCase())}</span>`;
+}
+function bindBadgeFallbacks(box){
+  box.querySelectorAll('.agent-badge img').forEach(img=>{
+    const fallback = ()=>{ const badge = img.closest('.agent-badge'); if(!badge) return; const label = document.createElement('span'); label.className='agent-initial'; label.textContent=(badge.title || '?').slice(0,1).toUpperCase(); badge.replaceChildren(label); };
+    img.addEventListener('error',fallback,{once:true});
+    if(img.complete && img.naturalWidth===0) fallback();
+  });
+}
+function refreshBadgeIcons(icons){
+  agentIcons = icons || {};
+  $$('#roster-cards .char-card').forEach(card=>{
+    const badge = card.querySelector('.agent-badge');
+    if(badge) badge.innerHTML = badgeContent(card.dataset.agent || '');
+  });
+  bindBadgeFallbacks($('#roster-cards'));
+  positionBadges();
+  refreshAgentIconPreviews();
 }
 
 function cardHTML(c, agent, i){
   const running = !!agentState[agent];
-  const icon = agent ? agentIcon(agent) : "";
   return `
     <button class="char-card${running?" running":""}" style="--i:${i};--c:${c.color}"
             data-id="${c.id}" data-agent="${esc(agent)}"
             aria-label="召唤 ${esc(c.name)}${agent?" · "+esc(agent):""}">
       <div class="art-holder">
-        ${icon ? `<span class="agent-badge" title="${esc(agent)}">
-          <img src="${icon}" alt="${esc(agent)}" draggable="false">
+        ${agent ? `<span class="agent-badge" title="${esc(agent)}">
+          ${badgeContent(agent)}
         </span>` : ""}
         <div class="art-wrap"><img src="${esc(c.img)}" alt="${esc(c.name)}" draggable="false"></div>
       </div>
@@ -265,11 +284,7 @@ function renderRoster(){
   }
   empty.hidden = true;
   box.innerHTML = cards.map((v,i)=>cardHTML(v.c, v.agent, i)).join("");
-  // 没配图标的 Agent（新加的、或图标文件名对不上）直接不显示徽标，不留裂图
-  box.querySelectorAll(".agent-badge img").forEach(img=>{
-    img.addEventListener("error", ()=>{ const b = img.closest(".agent-badge"); if(b) b.remove(); });
-    if(img.complete && img.naturalWidth === 0){ const b = img.closest(".agent-badge"); if(b) b.remove(); }
-  });
+  bindBadgeFallbacks(box);
   box.querySelectorAll(".char-card").forEach(btn=>{
     const c = characters.find(x=>x.id===btn.dataset.id);
     const agent = btn.dataset.agent || "";
@@ -623,6 +638,16 @@ function renderConfig(){
 }
 /* ================= 自定义形象 ================= */
 let characterDraft = null;
+function refreshCharacterColor(){
+  const color = $("#character-color").value;
+  const suggested = characterDraft?.suggestedColor;
+  const hasSuggestion = /^#[0-9a-f]{6}$/i.test(suggested || "");
+  $("#character-use-color").disabled = !hasSuggestion;
+  $("#character-color-hint").textContent = hasSuggestion
+    ? (characterDraft.colorSource === 'manual' ? `已保留手动配色；立绘推荐 ${suggested.toUpperCase()}。` : `立绘推荐 ${suggested.toUpperCase()}，可继续手动调色。`)
+    : '导入立绘后自动推荐，仍可手动调色。';
+  $(".character-preview").style.setProperty('--preview-color', color);
+}
 async function saveCharacters(next){
   clearTimeout(persistTimer);
   try {
@@ -635,10 +660,11 @@ async function saveCharacters(next){
 }
 function openCharacterEditor(c){
   if(!isDesktop || !window.aether.importCharacterArt) { toast("请在桌面应用中导入自定义形象。"); return; }
-  characterDraft = c ? {...c} : {id:'custom-'+crypto.randomUUID(), custom:true, img:'', color:'#7c5ce0', name:'', home:true, agents:[], anim:'circle', quotes:[]};
+  characterDraft = c ? {...c, colorSource:c.colorSource || 'manual'} : {id:'custom-'+crypto.randomUUID(), custom:true, img:'', color:'#7c5ce0', colorSource:'auto', name:'', home:true, agents:[], anim:'circle', quotes:[]};
   $("#character-editor-title").textContent = c ? "编辑形象" : "新增形象";
   $("#character-name").value = characterDraft.name;
   $("#character-color").value = characterDraft.color;
+  refreshCharacterColor();
   $("#character-editor-error").textContent = "";
   $("#character-preview").hidden = !characterDraft.img;
   $("#character-preview-empty").hidden = !!characterDraft.img;
@@ -648,6 +674,16 @@ function openCharacterEditor(c){
   $("#character-name").focus();
 }
 function bindCharacterEditor(){
+  $("#character-color").addEventListener('input',()=>{
+    characterDraft.colorSource = 'manual';
+    refreshCharacterColor();
+  });
+  $("#character-use-color").addEventListener('click',()=>{
+    if(!/^#[0-9a-f]{6}$/i.test(characterDraft?.suggestedColor || "")) return;
+    $("#character-color").value = characterDraft.suggestedColor;
+    characterDraft.colorSource = 'auto';
+    refreshCharacterColor();
+  });
   $("#character-add").addEventListener('click',()=>openCharacterEditor());
   $("#character-cancel").addEventListener('click',()=>$("#character-editor").close());
   $("#character-pick").addEventListener('click',async ()=>{
@@ -659,6 +695,9 @@ function bindCharacterEditor(){
       if(result.canceled || !$("#character-editor").open) return;
       if(!result.ok) { $("#character-editor-error").textContent = result.error; return; }
       characterDraft.img = result.img;
+      characterDraft.suggestedColor = /^#[0-9a-f]{6}$/i.test(result.suggestedColor || "") ? result.suggestedColor : '#7c5ce0';
+      if(characterDraft.colorSource !== 'manual') $("#character-color").value = characterDraft.suggestedColor;
+      refreshCharacterColor();
       $("#character-preview").src = result.img;
       $("#character-preview").hidden = false;
       $("#character-preview-empty").hidden = true;
@@ -839,6 +878,33 @@ function setTheme(name, silent){
 
 /* ================= 静态事件绑定 ================= */
 /* ================= agent 管理器渲染（设置页 · 窄条下拉展开行内编辑列表） ================= */
+function refreshAgentIconPreviews(){
+  $$('#agent-list .agent-row').forEach(row=>{
+    const a = agents[Number(row.dataset.idx)];
+    if(!a) return;
+    const preview = row.querySelector('.ar-icon-preview');
+    if(!preview) return;
+    const icon = agentIcon(a.name);
+    preview.innerHTML = icon ? `<img src="${esc(icon)}" alt="${esc(a.name)} 图标">` : esc(a.name.slice(0,1).toUpperCase());
+    preview.querySelector('img')?.addEventListener('error',()=>{preview.textContent=a.name.slice(0,1).toUpperCase();},{once:true});
+    row.querySelector('.ar-icon-reset').hidden = !a.customIcon;
+    row.querySelector('.ar-icon-mode').textContent = a.customIcon ? '自定义图标' : '自动读取';
+  });
+}
+async function saveAgentIcon(index, customIcon, icon){
+  const a = agents[index];
+  if(!a || !isDesktop) return false;
+  const next = agents.map((item,i)=>i===index ? {...item, customIcon} : item);
+  clearTimeout(persistTimer);
+  try {
+    if(!await window.aether.setConfig({...currentConfig(), agents:next})) { toast('图标保存失败，请重试。'); return false; }
+    agents = next;
+    refreshBadgeIcons({...agentIcons, [a.name]:icon || ''});
+    window.aether.getAgentIcons?.().then(refreshBadgeIcons).catch(()=>{});
+    toast(customIcon ? '自定义图标已保存，大厅和小窗同步使用。' : '已恢复自动读取图标。');
+    return true;
+  } catch (_) { toast('图标保存失败，请重试。'); return false; }
+}
 function renderAgentMgr(){
   if(!agents.length) agents.push({ name:"新 Agent", path:"", resident:false });
   closePickPop(); // 重绘会销毁锚点，下拉面板必须先收起
@@ -856,11 +922,31 @@ function renderAgentMgr(){
               title="常驻：启动星契时预先拉起，召唤时直接唤醒已有实例">常驻</button>
       <button class="btn-mini primary ar-save" type="button">保存</button>
       <button class="btn-mini ar-del" type="button">删除</button>
+      <div class="ar-icon-controls"><span class="ar-icon-preview"></span><button class="btn-mini ar-icon-pick" type="button">自定义图标…</button><button class="btn-mini ar-icon-reset" type="button"${a.customIcon?'':' hidden'}>恢复自动</button><span class="ar-icon-mode"></span><span class="ar-icon-help">PNG ≤ 2 MB，宽高 16–2048 像素，推荐 256 × 256 正方形；透明背景可选。</span></div>
     </div>`).join("");
   list.querySelectorAll(".agent-row").forEach(row=>{
     const i = Number(row.dataset.idx);
     const nameInp = row.querySelector(".ar-name");
     const pathInp = row.querySelector(".ar-path");
+    row.querySelector('.ar-icon-pick').addEventListener('click',async e=>{
+      if(!isDesktop || !window.aether.pickAgentIcon) { toast('请在桌面应用中选择自定义图标。'); return; }
+      const a = agents[i], button=e.currentTarget;
+      button.disabled=true; row.querySelector('.ar-icon-reset').disabled=true;
+      try {
+        const result=await window.aether.pickAgentIcon();
+        if(result.canceled) return;
+        if(!result.ok) { toast(result.error || '图标导入失败。'); return; }
+        const current=agents.indexOf(a);
+        if(current<0) return;
+        await saveAgentIcon(current,result.customIcon,result.icon);
+      } catch (_) { toast('图标导入失败，请重新选择。'); }
+      finally { button.disabled=false; row.querySelector('.ar-icon-reset').disabled=false; }
+    });
+    row.querySelector('.ar-icon-reset').addEventListener('click',async e=>{
+      e.currentTarget.disabled=true; row.querySelector('.ar-icon-pick').disabled=true;
+      await saveAgentIcon(i,'','');
+      row.querySelector('.ar-icon-reset').disabled=false; row.querySelector('.ar-icon-pick').disabled=false;
+    });
     // 提交该行：校验名称，改名自动同步到引用它的星灵
     const commit = ()=>{
       const a = agents[i]; if(!a) return;
@@ -869,6 +955,7 @@ function renderAgentMgr(){
       if(!name){ toast("名称不能为空"); nameInp.value = a.name; return; }
       if(agents.some((x,j)=>j!==i && x.name===name)){ toast(`名称「${name}」已存在，请换一个`); nameInp.value = a.name; return; }
       const oldName = a.name;
+      if(oldName !== name && agentIcons[oldName]) agentIcons[name] = agentIcons[oldName];
       const changed = oldName !== name || a.path !== path;
       a.name = name;
       a.path = path;
@@ -939,6 +1026,7 @@ function renderAgentMgr(){
       toast(`已删除「${gone.name}」，引用它的星灵已同步移除`);
     });
   });
+  refreshAgentIconPreviews();
 }
 
 /* ================= 启动目标可视化选择（下拉面板） =================
@@ -1183,13 +1271,14 @@ function bindStatic(){
       toast("浏览器预览模式：开机自启仅在桌面版生效");
       return;
     }
+    sw.disabled = true;
     try{
       const st = await window.aether.setLogin(on);
       sw.classList.toggle("on", !!st.openAtLogin);
-      toast(st.openAtLogin ? "已开启开机自启 · 登录后从托盘静默启动" : "已关闭开机自启");
+      toast(st.error || (st.openAtLogin ? "已开启开机自启 · 登录后从托盘静默启动" : "已关闭开机自启"));
     }catch(err){
       toast("设置开机自启失败：" + String(err && err.message || err));
-    }
+    }finally{ sw.disabled = false; }
   });
 
   /* 关闭窗口后驻留托盘（真实开关：状态随配置持久化） */
@@ -1229,6 +1318,7 @@ async function boot(){
         name:String(a && a.name || ""),
         path:String(a && a.path || ""),
         resident:!!(a && a.resident),   // 常驻：启动时预热，召唤时直接唤醒
+        customIcon:typeof a?.customIcon === 'string' ? a.customIcon : '',
       })).filter(a=>a.name)
     : [];
   if(!agents.length) agents = DEFAULT_AGENTS.map(a=>({...a}));
@@ -1290,6 +1380,7 @@ async function boot(){
       $("#sw-autostart").classList.toggle("on", !!login.openAtLogin);
     }catch(_){}
   }
+  if(isDesktop) window.aether.onLogin?.(login=>$("#sw-autostart").classList.toggle("on", !!login.openAtLogin));
   renderRoster();
   renderConfig();
   renderAgentMgr();
@@ -1298,6 +1389,10 @@ async function boot(){
   setInterval(tickClock, 20000);
   bindStatic();
   bindCharacterEditor();
+  if(isDesktop && window.aether.getAgentIcons){
+    window.aether.onAgentIcons?.(refreshBadgeIcons);
+    window.aether.getAgentIcons().then(refreshBadgeIcons).catch(()=>{});
+  }
 
   // 老配置（v1）读完就落盘成 v2：config-store 会先备份旧文件再写
   if(saved && (Number(saved.version) || 1) < 2) persistSoon();

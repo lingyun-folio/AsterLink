@@ -10,9 +10,15 @@
 
 本发行版仅包含本文来源说明覆盖的角色、图标及截图。
 
+`app/art/mystery.png` 为从文字描述独立生成的神秘剪影，包含“可自定义形象”提示，用作其他角色的默认占位立绘。生成时未输入第三方角色图片，提示词见 [生成记录](docs/mystery-generation-prompt.txt)。
+
 ## 第三方名称与依赖
 
 Codex、Claude、DeepSeek Harness、WorkBuddy 等文字名称用于说明可配置的应用或演示配置，不表示授权、合作或官方关联。第三方软件及模型服务不随本仓库分发。
 
 Electron、electron-builder 及其间接依赖各自适用原有许可证。发布应用时保留构建工具生成的 Electron 和 Chromium 许可文件。依赖信息由 `app/package-lock.json` 固定，不把依赖统一重许可为 MIT。
 
+
+`app/art/Deepseek.png` 为从本地历史素材恢复的鲸鱼娘立绘，不适用代码的 MIT 许可；作者署名和独立许可见 [角色形象与授权说明](docs/ARTWORK.md)。
+
+DeepSeek 鲸鱼娘角色原作署名「上善无形」，女仆形象二次设计署名「ZipZipPipe」；对应立绘及截图中的该形象部分采用 CC BY-NC-SA 4.0，不适用代码 MIT 许可。详见 [完整署名说明](docs/DEEPSEEK_ATTRIBUTION.md)。

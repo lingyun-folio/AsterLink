@@ -8,9 +8,13 @@ Turn your everyday AI tools into desktop companions you can summon.
 
 A **Windows desktop launcher for AI applications**, built with Electron and vanilla JavaScript. Launch local tools from a character roster, view process status, and reopen summoned applications through a floating launcher.
 
+**For people who prefer the familiar workflows of native agent applications and want to avoid setting up an extra Agent Server.** Register installed desktop applications and keep their own interfaces, accounts, and workflows.
+
 ![Character roster](docs/images/roster.png)
 
-> Public source edition 0.3.7 includes AI-assisted MiMo and Lumi characters and a fox app icon. Third-party character illustrations and logos with unverified redistribution permissions are excluded. Screenshots use demo configuration and simulated process states, not live model connections.
+> Default artwork uses DeepSeek and MiMo illustrations, with the mystery silhouette for other characters. The DeepSeek asset has a separate CC BY-NC-SA 4.0 license and attribution notice in [Artwork](docs/ARTWORK.md). Screenshots use demo configuration and simulated process states, not live model connections.
+
+> Due to copyright and licensing limits, this project does not include the full set of AI girl character artwork. For other characters, visit [ZipZipPipe on Bilibili](https://space.bilibili.com/4168597) and follow the usage instructions and license for each asset.
 
 ## Features
 
@@ -18,6 +22,7 @@ A **Windows desktop launcher for AI applications**, built with Electron and vani
 - Custom characters: import transparent PNG artwork, edit names and accent colors, and bind agents.
 - Connection settings: choose the home roster, agent mappings, quotes, and animations.
 - Application registry: scan candidates or choose a local executable or shortcut.
+- Application icons: choose a custom PNG for each agent in Settings; the roster and floating launcher share it. Local program icons and letters remain fallbacks.
 - Process indicators: refresh approximately every five seconds.
 - Floating launcher: horizontal or vertical layout, dragging, and position lock.
 - Tray presence, login startup, optional prewarming, light/dark themes, and adjustable animation duration.
@@ -48,7 +53,17 @@ The launcher does not require a model API key. Launched tools retain their own a
 
 Use **Connection Settings → Add Character** in the desktop app. Import a transparent PNG up to **10 MB**, with both dimensions between **256 and 4096 pixels**. A centered, full-body portrait around **800 × 1600** is recommended. White backgrounds and painted checkerboards are not transparency; automatic background removal is not included.
 
-Imported images are copied to local app data, so moving the original file does not break the character. Characters appear in the roster and connection settings and remain available after restarting. Built-in artwork can be replaced or reset; custom characters can be edited or deleted. See the [illustrated guide](docs/CUSTOM_CHARACTERS.md) for details.
+A glow accent is recommended locally from the artwork. Manual colors are preserved when replacing images; use the recommendation button to switch back to automatic colors. Imported images are copied to local app data, so moving the original file does not break the character. Characters appear in the roster and connection settings and remain available after restarting. Built-in artwork can be replaced or reset; custom characters can be edited or deleted. See the [illustrated guide](docs/CUSTOM_CHARACTERS.md) for details.
+
+## What changed in 0.3.9
+
+- Persistent custom PNG agent icons, shared by the roster and floating launcher.
+- Artwork-based accent recommendations and duplicate launcher entries merged by target.
+- DeepSeek and MiMo default artwork; mystery placeholders for other characters.
+- Correct Windows login-startup state readback and installer output integrity handling.
+- Refreshed light-theme screenshots. See [CHANGELOG](CHANGELOG.md).
+
+![Light-theme settings](docs/images/settings.png)
 
 ## Stack and development
 
@@ -63,7 +78,7 @@ npm run test:art
 npm run dist
 ```
 
-Outputs are generated under `app/dist/`. No code-signing certificate is configured. Windows CI runs source/resource checks and configuration tests; it does not cover the complete GUI or compatibility of every external application.
+Outputs are generated in the sibling `AsterLink-build/` directory outside the workspace. No code-signing certificate is configured. Windows CI runs source/resource checks and configuration tests; it does not cover the complete GUI or compatibility of every external application.
 
 ## Limitations
 

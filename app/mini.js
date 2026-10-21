@@ -65,7 +65,8 @@ document.addEventListener("click", e => {
 }, true);
 
 function avatarHTML(it) {
-  const tip = `${esc(it.name)} · ${esc(it.agent)}${it.running ? "（运行中）" : "（已退出）"}`;
+  const names = (it.names || [it.name]).map(esc).join('、');
+  const tip = `${esc(it.agent)}${it.running ? "（运行中）" : "（已退出）"} · 关联角色：${names}`;
   const inner = it.icon
     ? `<img src="${esc(it.icon)}" alt="${esc(it.agent)}" draggable="false">`
     : `<span class="ph">${esc((it.agent || "?").slice(0, 1).toUpperCase())}</span>`;
@@ -88,6 +89,11 @@ function render(data) {
 
   const box = $("#avatars");
   box.innerHTML = items.map(avatarHTML).join("");
+  box.querySelectorAll('.avatar img').forEach(img=>{
+    const fallback = ()=>{ const label = document.createElement('span'); label.className='ph'; label.textContent=(img.alt || '?').slice(0,1).toUpperCase(); img.replaceWith(label); };
+    img.addEventListener('error',fallback,{once:true});
+    if(img.complete && img.naturalWidth===0) fallback();
+  });
   box.querySelectorAll(".avatar").forEach(btn => {
     btn.addEventListener("click", () => {
       if (suppressClick) return;

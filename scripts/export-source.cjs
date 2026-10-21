@@ -7,7 +7,7 @@ if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(name)) throw new Error('Provide a folde
 const destination = path.join(root, '.local/github-upload', name);
 // An explicit allowlist prevents archives, generated previews or credentials
 // from entering the upload folder even before a Git repository is initialized.
-const roots = ['.github', '.gitignore', '.gitattributes', 'LICENSE', 'README.md', 'README.en.md', 'CONTRIBUTING.md', 'SECURITY.md', 'THIRD_PARTY_NOTICES.md', 'CHANGELOG.md', 'app', 'docs', 'scripts'];
+const roots = ['.github', '.gitignore', '.gitattributes', 'LICENSE', 'README.md', 'README.en.md', 'CONTRIBUTING.md', 'SECURITY.md', 'THIRD_PARTY_NOTICES.md', 'CHANGELOG.md', 'LICENSES', 'app', 'docs', 'scripts'];
 const blocked = new Set(['node_modules', 'dist', '.local', '.git']);
 const files = [];
 function collect(source) {

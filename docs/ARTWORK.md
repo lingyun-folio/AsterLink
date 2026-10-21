@@ -6,7 +6,9 @@
 
 | 资源 | 来源 | 使用说明 |
 | --- | --- | --- |
+| DeepSeek 立绘 `app/art/Deepseek.png` | 从本地历史素材恢复；鲸鱼娘原角色：上善无形，女仆形象二创：ZipZipPipe | 独立于代码 MIT 许可；按适用的 CC BY-NC-SA 4.0 要求署名、非商业使用及相同方式共享。作者、许可声明、原始下载链接的记录边界及截图中该立绘的使用说明见 [DeepSeek 署名与许可](DEEPSEEK_ATTRIBUTION.md)。 |
 | MiMo 立绘 `app/art/MiMo.png` | 维护者说明：由本人使用豆包与 GPT 生成、制作 | 标注为 AI 辅助创作；不声明为小米官方角色，不宣称独占版权。随项目按维护者可授权的权利范围提供，仍受生成平台条款和第三方权利约束。 |
+| 神秘占位立绘 `app/art/mystery.png` | 使用 OpenAI image_gen 从文字描述生成，未使用现有角色参考图 | 用作除 DeepSeek、MiMo 外的默认占位形象，含“可自定义形象”提示。维护者按可授权范围以 MIT 提供；并非 DeepSeek 官方角色。 |
 | 引航员 Lumi `app/art/lumi.png` | 本项目使用 OpenAI image_gen 从文字描述生成 | 从文字描述生成的独立设计。维护者按可授权范围以 MIT 提供。 |
 | 小灵狐图标及 `app/art/companion.png` | 本项目使用 OpenAI image_gen 生成，部分为缩放或格式转换 | 应用图标与备用形象，按可授权范围以 MIT 提供。 |
 
